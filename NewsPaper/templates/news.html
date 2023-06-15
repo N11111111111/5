@@ -1,0 +1,139 @@
+
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+
+{% block title %}
+news
+{% endblock title %}
+
+
+{% block content %}
+
+
+<h2>Страница  пользователя: - {{request.user.username}}</h2>
+   <h1>Все посты</h1>
+   <h3>{{ time_now|date:'M d Y' }}</h3>
+   <h3> {{ value1|default_if_none:"постов нет" }} </h3>
+
+{% if posts %}
+    <br>
+    <br>
+
+       <table>
+
+          <tr>
+              <td>
+                  Действия
+              </td>
+
+              <td>
+                  Автор
+              </td>
+               <td>
+                  Дата
+               </td>
+               <td>
+                  Название
+               </td>
+
+               <td>
+                  Текст
+               </td>
+
+             <h5>Все новости </h5>
+          </tr>
+          {% for post in posts|get_queryset_1 %}
+           <tr>
+        <td>
+            <a href="{% url 'post_edit' post.id %}">  <u>Редактировать</u></a>
+            <a href="{% url 'post_delete' post.id %}">     <u> Удалить </u></a>
+        </td>
+
+               <td>
+                {{ post.author.authorUser.username }}
+               </td>
+
+               <td>
+                {{ post.dateCreation|date:'d.m.Y H:i' }}
+                </td>
+
+                <td>
+             <a href="{% url 'post_detail' post.pk %}">{{ post.title|Censor }}</a>
+               </td>
+
+               <td>
+                   {{ post.text|truncatewords:50  }}
+               </td>
+
+            </tr>
+           {% endfor %}
+       </table>
+
+  <br>
+      <a href="{% url 'post_create' %}">Добавить новую новость или статью</a> <br>
+      <a href="{% url 'post_search' %}">Найти новость или статью</a> <br>
+    <br>
+      <table>
+          <tr>
+              <td>
+                  Действия
+              </td>
+
+              <td>
+                  Автор
+              </td>
+
+              <td>
+                  Дата
+              </td>
+
+              <td>
+                  Название
+              </td>
+
+              <td>
+                  Текст
+              </td>
+
+             <h5>Все статьи</h5>
+          </tr>
+          {% for post in posts|get_queryset %}
+            <tr>
+
+               <td>
+            <a href="{% url 'post_edit' post.id %}">  <u>Редактировать</u></a>
+            <a href="{% url 'post_delete' post.id %}"> <u> Удалить </u></a>
+
+        </td>
+
+               <td>
+                {{ post.author.authorUser.username }}
+               </td>
+
+               <td>
+                {{ post.dateCreation|date:'d.m.Y H:i' }}
+               </td>
+
+                <td>
+               <a href="{% url 'post_detail' post.pk %}">{{ post.title|Censor }}</a>
+                </td>
+
+                 <td>
+                   {{ post.text|truncatewords:50 |Censor }}
+                 </td>
+           </tr>
+          {% endfor %}
+       </table>
+
+
+{% else %}
+       <h2>Постов нет!</h2>
+
+{% endif %}
+
+
+{% endblock content %}
+
+
+
